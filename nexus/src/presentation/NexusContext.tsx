@@ -9,6 +9,9 @@ import { offlineCore, NetworkState } from '../data/offlineCore';
 import { mcpClient, mcpServer, initializeMCPServer } from '../data/mcpProtocol';
 import { parallelOrchestrator } from '../data/parallelOrchestrator';
 import { batteryManager, BatteryState } from '../data/batteryManager';
+import { systemPermissionCheck } from '../data/systemPermissionCheck';
+import { dynamicModelRanking, ModelRanking } from '../data/dynamicModelRanking';
+import { headlessBrowser } from '../data/headlessBrowser';
 import { 
   WorkspaceState, 
   AgentState, 

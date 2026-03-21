@@ -10,6 +10,7 @@ import { SkillsPanel } from './src/presentation/components/SkillsPanel';
 import { MemoryGauge } from './src/presentation/components/MemoryGauge';
 import { BrainDumpView } from './src/presentation/components/BrainDumpView';
 import { SystemStatus } from './src/presentation/components/SystemStatus';
+import { ThoughtLog } from './src/presentation/components/ThoughtLog';
 import { colors, spacing, borderRadius } from './src/presentation/theme';
 import { openRouterGateway } from './src/data/openRouterGateway';
 
@@ -36,6 +37,8 @@ function Dashboard({ onOpenBrainDump }: { onOpenBrainDump: () => void }) {
       />
       
       <MemoryGauge onPress={onOpenBrainDump} />
+      
+      <ThoughtLog maxSteps={30} />
       
       <WorkspaceCard
         workspacePath={workspace.path}
