@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "OpenClaw Nexus",
-    "slug": "openclaw-nexus",
-    "version": "1.0.0",
+    "name": "OpenClaw Nexus Prime",
+    "slug": "openclaw-nexus-prime",
+    "version": "3.5.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -22,10 +22,18 @@
         "backgroundColor": "#0a1628"
       },
       "package": "com.openclaw.nexus",
+      "versionCode": 35,
       "permissions": [
         "android.permission.FOREGROUND_SERVICE",
         "android.permission.FOREGROUND_SERVICE_SPECIAL_USE",
-        "android.permission.POST_NOTIFICATIONS"
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.MANAGE_EXTERNAL_STORAGE",
+        "android.permission.WAKE_LOCK",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.RECEIVE_BOOT_COMPLETED"
       ]
     },
     "plugins": [
@@ -39,7 +47,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "openclaw-nexus"
+        "projectId": "openclaw-nexus-prime"
       }
     }
   }
