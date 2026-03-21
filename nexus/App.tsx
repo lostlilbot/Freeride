@@ -7,12 +7,14 @@ import { WorkspaceCard, FileList } from './src/presentation/components/Workspace
 import { ChatInterface } from './src/presentation/components/ChatInterface';
 import { SettingsPanel } from './src/presentation/components/SettingsPanel';
 import { SkillsPanel } from './src/presentation/components/SkillsPanel';
+import { MemoryGauge } from './src/presentation/components/MemoryGauge';
+import { BrainDumpView } from './src/presentation/components/BrainDumpView';
 import { colors, spacing, borderRadius } from './src/presentation/theme';
 import { openRouterGateway } from './src/data/openRouterGateway';
 
 type TabType = 'dashboard' | 'chat' | 'skills' | 'settings' | 'docs';
 
-function Dashboard() {
+function Dashboard({ onOpenBrainDump }: { onOpenBrainDump: () => void }) {
   const { state, pickWorkspace, refreshFiles } = useNexus();
   const { workspace, agent, skills, messages } = state;
 
@@ -23,6 +25,8 @@ function Dashboard() {
         activeSkill={agent.activeSkill} 
         memoryUsage={agent.memoryUsage} 
       />
+      
+      <MemoryGauge onPress={onOpenBrainDump} />
       
       <WorkspaceCard
         workspacePath={workspace.path}
@@ -134,6 +138,7 @@ function DocsTab() {
 
 function MainContent() {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
+  const [showBrainDump, setShowBrainDump] = useState(false);
   const { state } = useNexus();
 
   if (state.isLoading) {
@@ -153,7 +158,7 @@ function MainContent() {
       </View>
 
       <View style={styles.tabContent}>
-        {activeTab === 'dashboard' && <Dashboard />}
+        {activeTab === 'dashboard' && <Dashboard onOpenBrainDump={() => setShowBrainDump(true)} />}
         {activeTab === 'chat' && <ChatTab />}
         {activeTab === 'skills' && <SkillsTab />}
         {activeTab === 'settings' && <SettingsTab />}
@@ -182,6 +187,8 @@ function MainContent() {
           <Text style={[styles.tabLabel, activeTab === 'docs' && styles.tabLabelActive]}>Docs</Text>
         </TouchableOpacity>
       </View>
+
+      <BrainDumpView visible={showBrainDump} onClose={() => setShowBrainDump(false)} />
 
       <StatusBar style="light" />
     </SafeAreaView>

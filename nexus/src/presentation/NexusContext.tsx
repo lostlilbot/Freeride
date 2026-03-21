@@ -3,6 +3,8 @@ import * as DocumentPicker from 'expo-document-picker';
 import { skillEngine } from '../data/skillEngine';
 import { openRouterGateway } from '../data/openRouterGateway';
 import { storageRepository, AppSettings } from '../data/storageRepository';
+import { memoryEngine } from '../data/memoryEngine';
+import { researchEngine } from '../data/researchEngine';
 import { 
   WorkspaceState, 
   AgentState, 
@@ -101,6 +103,10 @@ export function NexusProvider({ children }: { children: ReactNode }) {
 
   const loadInitialState = async () => {
     try {
+      await memoryEngine.initialize();
+      
+      const memoryCounts = await memoryEngine.getMemoryCount();
+      
       const [workspace, agentState, apiKeys, settings, messages] = await Promise.all([
         storageRepository.loadWorkspace(),
         storageRepository.loadAgentState(),
@@ -126,6 +132,11 @@ export function NexusProvider({ children }: { children: ReactNode }) {
 
       dispatch({ type: 'SET_SETTINGS', payload: settings });
       dispatch({ type: 'SET_MESSAGES', payload: messages });
+
+      dispatch({ 
+        type: 'SET_AGENT_STATE', 
+        payload: { memoryUsage: memoryCounts.total } 
+      });
 
       if (workspace?.uri) {
         const skills = await skillEngine.loadSkills();
@@ -195,15 +206,58 @@ export function NexusProvider({ children }: { children: ReactNode }) {
     };
     dispatch({ type: 'ADD_MESSAGE', payload: userMessage });
     
+    const isCorrection = /^(no|wrong|incorrect|not|don't|don't know)/i.test(content) ||
+      /^(fix|change|update|revise)/i.test(content);
+    
+    if (isCorrection && state.messages.length > 0) {
+      const lastAssistantMsg = [...state.messages].reverse().find(m => m.role === 'assistant');
+      if (lastAssistantMsg) {
+        await memoryEngine.storeLesson({
+          trigger: content.substring(0, 50),
+          lesson: `User corrected: "${lastAssistantMsg.content.substring(0, 100)}..." → "${content}"`,
+          context: content,
+          timestamp: Date.now(),
+        });
+        
+        const memoryCounts = await memoryEngine.getMemoryCount();
+        dispatch({ 
+          type: 'SET_AGENT_STATE', 
+          payload: { memoryUsage: memoryCounts.total } 
+        });
+      }
+    }
+    
     dispatch({ type: 'SET_AGENT_STATE', payload: { status: 'active' } });
 
     try {
       const activeSkill = state.agent.activeSkill || 'default';
       const skill = skillEngine.findSkillByTrigger(activeSkill);
 
+      const relevantContext = await memoryEngine.retrieveRelevantContext(content, 3);
+      const knowledgeInjection = await memoryEngine.generateKnowledgeInjection();
+      const researchContext = await researchEngine.getResearchContext(content);
+
+      const contextPrompt = relevantContext.length > 0 
+        ? `\n\nRelevant past experiences:\n${relevantContext.map(c => `- ${c.content}`).join('\n')}`
+        : '';
+      
+      const fullSystemPrompt = skill?.logic_prompt 
+        ? `${skill.logic_prompt}${knowledgeInjection}${researchContext}${contextPrompt}`
+        : `You are OpenClaw Nexus.${knowledgeInjection}${researchContext}${contextPrompt}`;
+
+      researchEngine.setConfidence(0.9);
+      
+      if (researchEngine.needsResearch()) {
+        researchEngine.setConfidence(0.5);
+        const researchResults = await researchEngine.performResearch(content);
+        if (researchResults.length > 0) {
+          const newResearchContext = await researchEngine.getResearchContext(content);
+        }
+      }
+
       const response = await openRouterGateway.complete({
         messages: [...state.messages, userMessage],
-        skill: skill?.logic_prompt,
+        skill: fullSystemPrompt,
       });
 
       const assistantMessage: ChatMessage = {
@@ -217,8 +271,21 @@ export function NexusProvider({ children }: { children: ReactNode }) {
       
       const allMessages = [...state.messages, userMessage, assistantMessage];
       await storageRepository.saveChatHistory(allMessages);
+
+      await memoryEngine.storeMemory({
+        content: `User: ${content}\nAssistant: ${response.content}`,
+        type: 'final_output',
+        timestamp: Date.now(),
+      });
       
-      dispatch({ type: 'SET_AGENT_STATE', payload: { status: 'idle' } });
+      const memoryCounts = await memoryEngine.getMemoryCount();
+      dispatch({ 
+        type: 'SET_AGENT_STATE', 
+        payload: { 
+          status: 'idle',
+          memoryUsage: memoryCounts.total
+        } 
+      });
     } catch (error: any) {
       console.error('Error sending message:', error);
       

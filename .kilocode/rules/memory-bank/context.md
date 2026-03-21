@@ -8,6 +8,7 @@ OpenClaw Nexus is a modular AI agent Android application built with Expo SDK 52.
 
 ## Recently Completed
 
+### Core Features
 - [x] SPEC.md specification document
 - [x] Expo SDK 52 project setup with dependencies
 - [x] Domain models (Skill, Workspace, Agent, ChatMessage)
@@ -20,7 +21,16 @@ OpenClaw Nexus is a modular AI agent Android application built with Expo SDK 52.
 - [x] Skills panel for skill management
 - [x] Settings panel with File Lock toggle
 - [x] Integrated README documentation
-- [x] Expo prebuild generates Android project
+
+### Memory Engine (ADD-ON)
+- [x] Long-term semantic memory with SQLite + vector embeddings
+- [x] Knowledge Base table with cosine similarity retrieval
+- [x] Self-correction system (triggers on "no", "wrong", "fix")
+- [x] Lessons Learned storage and retrieval
+- [x] Knowledge Injection system for system prompts
+- [x] Autonomous research with confidence scoring (<0.7 triggers web search)
+- [x] Memory Gauge UI showing learned facts count
+- [x] Brain Dump view for editing/deleting lessons
 
 ## Project Structure
 
@@ -31,9 +41,26 @@ OpenClaw Nexus is a modular AI agent Android application built with Expo SDK 52.
 | `nexus/src/data/skillEngine.ts` | Dynamic skill file management |
 | `nexus/src/data/openRouterGateway.ts` | AI API with fallback logic |
 | `nexus/src/data/storageRepository.ts` | AsyncStorage persistence |
+| `nexus/src/data/memoryEngine.ts` | Vector memory with SQLite |
+| `nexus/src/data/researchEngine.ts` | Autonomous web research |
 | `nexus/src/presentation/NexusContext.tsx` | Global state provider |
 | `nexus/src/presentation/components/` | UI components |
 | `nexus/README.md` | Integrated user documentation |
+
+## Memory Engine Details
+
+### Vector Similarity
+- 128-dimension embeddings using hash-based approach
+- Cosine similarity for retrieval
+- Top-3 relevant memories injected into context
+
+### Correction Detection
+Triggers: "no", "wrong", "incorrect", "not", "don't", "fix", "change", "update"
+
+### Research Engine
+- Confidence threshold: 0.7
+- Below threshold triggers DuckDuckGo search
+- Results stored in Knowledge Base
 
 ## Build Instructions
 
@@ -58,3 +85,4 @@ The APK will be at: `android/app/build/outputs/apk/debug/app-debug.apk`
 | Date | Changes |
 |------|---------|
 | 2026-03-21 | Created OpenClaw Nexus Android agent app |
+| 2026-03-21 | Added Memory Engine with vector storage and autonomous research |
