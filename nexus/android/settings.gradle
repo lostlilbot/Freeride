@@ -21,7 +21,7 @@ extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
   }
 }
 
-rootProject.name = 'OpenClaw Nexus'
+rootProject.name = 'OpenClaw Nexus Prime'
 
 dependencyResolutionManagement {
   versionCatalogs {
