@@ -2,11 +2,16 @@ import { ModelInfo, ChatMessage } from '../domain/models';
 
 const OPENROUTER_BASE = 'https://openrouter.ai/api/v1';
 
-const OPENROUTER_API_KEY = "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";
+const getApiKey = (): string => {
+  if (typeof process !== 'undefined' && process.env && process.env.OPENROUTER_API_KEY) {
+    return process.env.OPENROUTER_API_KEY;
+  }
+  return '';
+};
 
 const AGENT_ATTRIBUTION_HEADERS = {
   'HTTP-Referer': 'https://github.com/lostlilbot/Freeride',
-  'X-Title': 'Nexus Prime Sovereign',
+  'X-Title': 'Freeride Mobile',
 };
 
 const DEFAULT_MODELS: ModelInfo[] = [
@@ -143,9 +148,9 @@ export class OpenRouterGateway {
     const response = await fetch(`${OPENROUTER_BASE}/chat/completions`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+        'Authorization': `Bearer ${getApiKey()}`,
         'HTTP-Referer': 'https://github.com/lostlilbot/Freeride',
-        'X-Title': 'Nexus Prime Sovereign',
+        'X-Title': 'Freeride Mobile',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
