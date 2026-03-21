@@ -1,87 +1,60 @@
-# Active Context: Next.js Starter Template
+# Active Context: OpenClaw Nexus Agent App
 
 ## Current State
 
-**Template Status**: ✅ Ready for development
+**Project Status**: ✅ Source code complete, APK build requires local environment
 
-The template is a clean Next.js 16 starter with TypeScript and Tailwind CSS 4. It's ready for AI-assisted expansion to build any type of application.
+OpenClaw Nexus is a modular AI agent Android application built with Expo SDK 52. The app provides workspace-scoped file management, dynamic skill engine, and OpenRouter free-tier AI integration.
 
 ## Recently Completed
 
-- [x] Base Next.js 16 setup with App Router
-- [x] TypeScript configuration with strict mode
-- [x] Tailwind CSS 4 integration
-- [x] ESLint configuration
-- [x] Memory bank documentation
-- [x] Recipe system for common features
+- [x] SPEC.md specification document
+- [x] Expo SDK 52 project setup with dependencies
+- [x] Domain models (Skill, Workspace, Agent, ChatMessage)
+- [x] SkillEngine with dynamic .skill.json file management
+- [x] OpenRouter Gateway with 429 fallback rotation (40% context, 30% tools, 20% recency, 10% speed)
+- [x] StorageRepository with AsyncStorage persistence
+- [x] NexusContext state management provider
+- [x] Dashboard UI with Nexus Status, Workspace, Files
+- [x] Chat interface with message history
+- [x] Skills panel for skill management
+- [x] Settings panel with File Lock toggle
+- [x] Integrated README documentation
+- [x] Expo prebuild generates Android project
 
-## Current Structure
+## Project Structure
 
-| File/Directory | Purpose | Status |
-|----------------|---------|--------|
-| `src/app/page.tsx` | Home page | ✅ Ready |
-| `src/app/layout.tsx` | Root layout | ✅ Ready |
-| `src/app/globals.css` | Global styles | ✅ Ready |
-| `.kilocode/` | AI context & recipes | ✅ Ready |
+| Path | Purpose |
+|------|---------|
+| `nexus/App.tsx` | Main app with tab navigation |
+| `nexus/src/domain/models.ts` | TypeScript interfaces |
+| `nexus/src/data/skillEngine.ts` | Dynamic skill file management |
+| `nexus/src/data/openRouterGateway.ts` | AI API with fallback logic |
+| `nexus/src/data/storageRepository.ts` | AsyncStorage persistence |
+| `nexus/src/presentation/NexusContext.tsx` | Global state provider |
+| `nexus/src/presentation/components/` | UI components |
+| `nexus/README.md` | Integrated user documentation |
 
-## Current Focus
+## Build Instructions
 
-The template is ready. Next steps depend on user requirements:
+To build the APK locally:
 
-1. What type of application to build
-2. What features are needed
-3. Design/branding preferences
+```bash
+cd nexus
 
-## Quick Start Guide
+# Install Android SDK, then:
+export ANDROID_HOME=/path/to/android-sdk
+export JAVA_HOME=/path/to/java-17
 
-### To add a new page:
-
-Create a file at `src/app/[route]/page.tsx`:
-```tsx
-export default function NewPage() {
-  return <div>New page content</div>;
-}
+# Run prebuild and build:
+bun run prebuild -- --platform android
+cd android && ./gradlew assembleDebug
 ```
 
-### To add components:
-
-Create `src/components/` directory and add components:
-```tsx
-// src/components/ui/Button.tsx
-export function Button({ children }: { children: React.ReactNode }) {
-  return <button className="px-4 py-2 bg-blue-600 text-white rounded">{children}</button>;
-}
-```
-
-### To add a database:
-
-Follow `.kilocode/recipes/add-database.md`
-
-### To add API routes:
-
-Create `src/app/api/[route]/route.ts`:
-```tsx
-import { NextResponse } from "next/server";
-
-export async function GET() {
-  return NextResponse.json({ message: "Hello" });
-}
-```
-
-## Available Recipes
-
-| Recipe | File | Use Case |
-|--------|------|----------|
-| Add Database | `.kilocode/recipes/add-database.md` | Data persistence with Drizzle + SQLite |
-
-## Pending Improvements
-
-- [ ] Add more recipes (auth, email, etc.)
-- [ ] Add example components
-- [ ] Add testing setup recipe
+The APK will be at: `android/app/build/outputs/apk/debug/app-debug.apk`
 
 ## Session History
 
 | Date | Changes |
 |------|---------|
-| Initial | Template created with base setup |
+| 2026-03-21 | Created OpenClaw Nexus Android agent app |
