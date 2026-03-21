@@ -111,34 +111,77 @@ function SettingsTab() {
 function DocsTab() {
   return (
     <View style={styles.docsContainer}>
-      <Text style={styles.docsTitle}>DOCUMENTATION</Text>
+      <Text style={styles.docsTitle}>NEXUS PRIME v3.5</Text>
       <ScrollView style={styles.docsContent}>
-        <Text style={styles.docsSection}>Granting Workspace Access</Text>
+        <Text style={styles.docsSection}>Quick Start</Text>
         <Text style={styles.docsText}>
-          1. Tap "Select Workspace" on Dashboard{'\n'}
-          2. Choose a folder using the file picker{'\n'}
-          3. The app will create /skills subdirectory
+          1. Install APK → 2. Add OpenRouter Key{'\n'}
+          3. Select Workspace → 4. Start chatting
         </Text>
         
-        <Text style={styles.docsSection}>Activating Accessibility</Text>
+        <Text style={styles.docsSection}>Workspace Access</Text>
         <Text style={styles.docsText}>
-          1. Settings → Accessibility{'\n'}
-          2. Find "OpenClaw Nexus"{'\n'}
-          3. Toggle to enable
+          Tap "Select Workspace" on Dashboard{'\n'}
+          Choose folder → /skills/ auto-created
         </Text>
 
-        <Text style={styles.docsSection}>API Key Setup</Text>
+        <Text style={styles.docsSection}>FreeRide Protocol</Text>
         <Text style={styles.docsText}>
-          Get your free key at openrouter.ai{'\n'}
-          Add it in Settings → API Configuration
-        </Text>
-
-        <Text style={styles.docsSection}>Model Ranking</Text>
-        <Text style={styles.docsText}>
-          • 40% Context relevance{'\n'}
-          • 30% Tools availability{'\n'}
+          Model Ranking:{'\n'}
+          • 40% Context{'\n'}
+          • 30% Tools{'\n'}
           • 20% Recency{'\n'}
-          • 10% Speed
+          • 10% Speed{'\n'}
+          {'\n'}
+          429 = Auto-rotate to next model
+        </Text>
+
+        <Text style={styles.docsSection}>Self-Onboarding</Text>
+        <Text style={styles.docsText}>
+          Say "optimize" or "onboard" to{'\n'}
+          calibrate for your device{'\n'}
+          {'\n'}
+          Triggers Wizard skill
+        </Text>
+
+        <Text style={styles.docsSection}>Memory System</Text>
+        <Text style={styles.docsText}>
+          Corrections trigger learning:{'\n'}
+          "no", "wrong", "fix", "change"{'\n'}
+          {'\n'}
+          View lessons in Brain Dump
+        </Text>
+
+        <Text style={styles.docsSection}>Power Modes</Text>
+        <Text style={styles.docsText}>
+          {'\u2022'} Normal: 50%+ - Full AI{'\n'}
+          {'\u2022'} Low: 15-50% - Single request{'\n'}
+          {'\u2022'} Critical: -15% - Read-only
+        </Text>
+
+        <Text style={styles.docsSection}>MCP Protocol</Text>
+        <Text style={styles.docsText}>
+          P2P tool trading via JSON-RPC{'\n'}
+          Tools: list_files, read_file{'\n'}
+          Resources: nexus://status
+        </Text>
+
+        <Text style={styles.docsSection}>Skill Schema</Text>
+        <Text style={styles.docsText}>
+          {`{`}{'\n'}
+          {"  "}"name": "skill_name",{'\n'}
+          {"  "}"trigger": "keyword",{'\n'}
+          {"  "}"logic_prompt": "...",{'\n'}
+          {"  "}"tools": ["read","write"],{'\n'}
+          {"  "}"enabled": true{'\n'}
+          {`}`}
+        </Text>
+
+        <Text style={styles.docsSection}>Files</Text>
+        <Text style={styles.docsText}>
+          Full docs: README.md{'\n'}
+          AI commands: AGENTS.md{'\n'}
+          Skills: /skills/*.json
         </Text>
       </ScrollView>
     </View>

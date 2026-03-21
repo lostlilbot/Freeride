@@ -1,0 +1,69 @@
+{
+  "name": "wizard",
+  "trigger": "optimize onboard calibrate tune",
+  "logic_prompt": "You are the Nexus Prime Wizard. Your purpose is to optimize the agent for the current device. When triggered, you must:\n\n1. Scan device hardware specs (RAM, CPU, Battery, Storage)\n2. Run inference speed benchmarks\n3. Analyze typical usage patterns\n4. Optimize FreeRide weights for this device\n5. Save optimized configuration\n\nRespond with structured JSON showing:\n- Hardware profile detected\n- Recommended weights (context/tools/recency/speed)\n- Power mode settings\n- Confidence score for optimization\n\nAlways be concise and actionable.",
+  "tools": [
+    "list_files",
+    "get_workspace_info",
+    "get_battery_status",
+    "get_network_state",
+    "read_file"
+  ],
+  "enabled": true,
+  "version": "1.0.0",
+  "optimization_targets": {
+    "ram_thresholds": {
+      "low": 4,
+      "medium": 8,
+      "high": 12
+    },
+    "battery_thresholds": {
+      "normal": 50,
+      "low": 15,
+      "critical": 5
+    },
+    "weight_presets": {
+      "balanced": {
+        "context": 0.40,
+        "tools": 0.30,
+        "recency": 0.20,
+        "speed": 0.10
+      },
+      "speed_focused": {
+        "context": 0.25,
+        "tools": 0.25,
+        "recency": 0.20,
+        "speed": 0.30
+      },
+      "quality_focused": {
+        "context": 0.50,
+        "tools": 0.25,
+        "recency": 0.15,
+        "speed": 0.10
+      }
+    }
+  },
+  "hardware_profiles": {
+    "flagship": {
+      "ram_gb": 12,
+      "cpu_cores": 8,
+      "battery_mah": 4500,
+      "recommended_mode": "quality_focused",
+      "parallel_tasks": 3
+    },
+    "mid_range": {
+      "ram_gb": 6,
+      "cpu_cores": 6,
+      "battery_mah": 4000,
+      "recommended_mode": "balanced",
+      "parallel_tasks": 2
+    },
+    "budget": {
+      "ram_gb": 4,
+      "cpu_cores": 4,
+      "battery_mah": 3000,
+      "recommended_mode": "speed_focused",
+      "parallel_tasks": 1
+    }
+  }
+}
