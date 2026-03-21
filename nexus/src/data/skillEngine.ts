@@ -138,8 +138,10 @@ export class SkillEngine {
         name: entry,
         path: `${relativePath}/${entry}`.replace(/^\//, ''),
         isDirectory: info.isDirectory || false,
-        size: info.size,
-        modifiedAt: info.modificationTime ? new Date(info.modificationTime * 1000).toISOString() : undefined,
+        size: 'size' in info ? info.size : 0,
+        modifiedAt: 'modificationTime' in info && info.modificationTime 
+          ? new Date(info.modificationTime * 1000).toISOString() 
+          : new Date().toISOString(),
       });
     }
 
