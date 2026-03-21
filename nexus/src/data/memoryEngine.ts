@@ -1,9 +1,9 @@
-import { openDB, DB } from 'react-native-quick-sqlite';
+import { open, QuickSQLiteConnection } from 'react-native-quick-sqlite';
 
 export interface MemoryEntry {
   id?: number;
   content: string;
-  embedding: number[];
+  embedding?: number[];
   type: 'user_correction' | 'final_output' | 'research' | 'lesson';
   timestamp: number;
   relevance_score?: number;
@@ -21,14 +21,14 @@ export interface LessonLearned {
 const DB_NAME = 'openclaw_memory.db';
 
 class MemoryEngine {
-  private db: DB | null = null;
+  private db: QuickSQLiteConnection | null = null;
   private isInitialized = false;
 
   async initialize(): Promise<void> {
     if (this.isInitialized) return;
 
     try {
-      this.db = openDB({ name: DB_NAME });
+      this.db = open({ name: DB_NAME });
       
       await this.db.execute(`
         CREATE TABLE IF NOT EXISTS knowledge_base (

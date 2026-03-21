@@ -5,6 +5,10 @@ import { openRouterGateway } from '../data/openRouterGateway';
 import { storageRepository, AppSettings } from '../data/storageRepository';
 import { memoryEngine } from '../data/memoryEngine';
 import { researchEngine } from '../data/researchEngine';
+import { offlineCore, NetworkState } from '../data/offlineCore';
+import { mcpClient, mcpServer, initializeMCPServer } from '../data/mcpProtocol';
+import { parallelOrchestrator } from '../data/parallelOrchestrator';
+import { batteryManager, BatteryState } from '../data/batteryManager';
 import { 
   WorkspaceState, 
   AgentState, 
@@ -13,12 +17,21 @@ import {
   FileInfo 
 } from '../domain/models';
 
+interface SystemInfo {
+  networkState: NetworkState;
+  batteryLevel: number;
+  powerMode: string;
+  mcpConnected: boolean;
+  parallelTasks: number;
+}
+
 interface NexusState {
   workspace: WorkspaceState;
   agent: AgentState;
   skills: Skill[];
   messages: ChatMessage[];
   settings: AppSettings;
+  system: SystemInfo;
   isLoading: boolean;
 }
 
@@ -30,7 +43,8 @@ type NexusAction =
   | { type: 'ADD_MESSAGE'; payload: ChatMessage }
   | { type: 'SET_SETTINGS'; payload: AppSettings }
   | { type: 'SET_LOADING'; payload: boolean }
-  | { type: 'SET_FILES'; payload: FileInfo[] };
+  | { type: 'SET_FILES'; payload: FileInfo[] }
+  | { type: 'SET_SYSTEM_INFO'; payload: Partial<SystemInfo> };
 
 const initialState: NexusState = {
   workspace: {
@@ -54,6 +68,13 @@ const initialState: NexusState = {
     notificationsEnabled: true,
     maxMemoryMB: 50,
   },
+  system: {
+    networkState: 'unknown',
+    batteryLevel: 100,
+    powerMode: 'normal',
+    mcpConnected: false,
+    parallelTasks: 0,
+  },
   isLoading: true,
 };
 
@@ -75,6 +96,8 @@ function nexusReducer(state: NexusState, action: NexusAction): NexusState {
       return { ...state, isLoading: action.payload };
     case 'SET_FILES':
       return { ...state, workspace: { ...state.workspace, files: action.payload } };
+    case 'SET_SYSTEM_INFO':
+      return { ...state, system: { ...state.system, ...action.payload } };
     default:
       return state;
   }
@@ -104,6 +127,23 @@ export function NexusProvider({ children }: { children: ReactNode }) {
   const loadInitialState = async () => {
     try {
       await memoryEngine.initialize();
+      await offlineCore.initialize();
+      await batteryManager.initialize();
+      
+      const batteryState = batteryManager.getState();
+      const networkState = offlineCore.getNetworkState();
+      
+      initializeMCPServer([]);
+      
+      dispatch({
+        type: 'SET_SYSTEM_INFO',
+        payload: {
+          networkState,
+          batteryLevel: batteryState.level,
+          powerMode: batteryState.powerMode,
+          mcpConnected: mcpServer.isAvailable(),
+        },
+      });
       
       const memoryCounts = await memoryEngine.getMemoryCount();
       
@@ -276,6 +316,7 @@ export function NexusProvider({ children }: { children: ReactNode }) {
         content: `User: ${content}\nAssistant: ${response.content}`,
         type: 'final_output',
         timestamp: Date.now(),
+        embedding: [],
       });
       
       const memoryCounts = await memoryEngine.getMemoryCount();

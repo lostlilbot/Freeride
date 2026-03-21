@@ -9,6 +9,7 @@ import { SettingsPanel } from './src/presentation/components/SettingsPanel';
 import { SkillsPanel } from './src/presentation/components/SkillsPanel';
 import { MemoryGauge } from './src/presentation/components/MemoryGauge';
 import { BrainDumpView } from './src/presentation/components/BrainDumpView';
+import { SystemStatus } from './src/presentation/components/SystemStatus';
 import { colors, spacing, borderRadius } from './src/presentation/theme';
 import { openRouterGateway } from './src/data/openRouterGateway';
 
@@ -16,7 +17,7 @@ type TabType = 'dashboard' | 'chat' | 'skills' | 'settings' | 'docs';
 
 function Dashboard({ onOpenBrainDump }: { onOpenBrainDump: () => void }) {
   const { state, pickWorkspace, refreshFiles } = useNexus();
-  const { workspace, agent, skills, messages } = state;
+  const { workspace, agent, skills, messages, system } = state;
 
   return (
     <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
@@ -24,6 +25,14 @@ function Dashboard({ onOpenBrainDump }: { onOpenBrainDump: () => void }) {
         status={agent.status} 
         activeSkill={agent.activeSkill} 
         memoryUsage={agent.memoryUsage} 
+      />
+      
+      <SystemStatus
+        networkStatus={system.networkState}
+        batteryLevel={system.batteryLevel}
+        powerMode={system.powerMode}
+        mcpConnected={system.mcpConnected}
+        parallelTasks={system.parallelTasks}
       />
       
       <MemoryGauge onPress={onOpenBrainDump} />

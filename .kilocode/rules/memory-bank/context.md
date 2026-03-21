@@ -32,6 +32,12 @@ OpenClaw Nexus is a modular AI agent Android application built with Expo SDK 52.
 - [x] Memory Gauge UI showing learned facts count
 - [x] Brain Dump view for editing/deleting lessons
 
+### Nexus Prime Module (ADD-ON)
+- [x] Offline Core - intent parsing when network disconnected
+- [x] MCP Server/Client - Model Context Protocol integration
+- [x] Parallel Orchestration - multi-model bursting for complex tasks
+- [x] Battery Manager - power-aware throttling (thresholds: 50%/15%/5%)
+
 ## Project Structure
 
 | Path | Purpose |
@@ -43,24 +49,35 @@ OpenClaw Nexus is a modular AI agent Android application built with Expo SDK 52.
 | `nexus/src/data/storageRepository.ts` | AsyncStorage persistence |
 | `nexus/src/data/memoryEngine.ts` | Vector memory with SQLite |
 | `nexus/src/data/researchEngine.ts` | Autonomous web research |
+| `nexus/src/data/offlineCore.ts` | Offline intent parsing |
+| `nexus/src/data/mcpProtocol.ts` | MCP Server/Client |
+| `nexus/src/data/parallelOrchestrator.ts` | Multi-model execution |
+| `nexus/src/data/batteryManager.ts` | Power-aware throttling |
 | `nexus/src/presentation/NexusContext.tsx` | Global state provider |
 | `nexus/src/presentation/components/` | UI components |
 | `nexus/README.md` | Integrated user documentation |
 
-## Memory Engine Details
+## Nexus Prime Details
 
-### Vector Similarity
-- 128-dimension embeddings using hash-based approach
-- Cosine similarity for retrieval
-- Top-3 relevant memories injected into context
+### Offline Core
+- Network state monitoring via expo-network
+- Local intent parsing (read, write, list, search, chat)
+- Automatic pivot to offline mode on disconnect
 
-### Correction Detection
-Triggers: "no", "wrong", "incorrect", "not", "don't", "fix", "change", "update"
+### MCP Protocol
+- Server: exposes local tools (list_files, get_workspace_info)
+- Client: connect to external MCP servers
+- JSON-RPC 2.0 protocol
 
-### Research Engine
-- Confidence threshold: 0.7
-- Below threshold triggers DuckDuckGo search
-- Results stored in Knowledge Base
+### Parallel Orchestration
+- Splits complex tasks into subtasks
+- Executes across multiple models simultaneously
+- Aggregates results with source attribution
+
+### Battery Throttling
+- Normal (50%+): Full capabilities
+- Low Power (15-50%): Single request, no background
+- Critical (<15%): Read-only, minimal model
 
 ## Build Instructions
 
@@ -86,3 +103,4 @@ The APK will be at: `android/app/build/outputs/apk/debug/app-debug.apk`
 |------|---------|
 | 2026-03-21 | Created OpenClaw Nexus Android agent app |
 | 2026-03-21 | Added Memory Engine with vector storage and autonomous research |
+| 2026-03-21 | Added Nexus Prime module with offline core, MCP, parallel orchestration, battery throttling |

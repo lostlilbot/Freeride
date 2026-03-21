@@ -22,6 +22,7 @@
     "expo-sharing": "~12.0.0",
     "expo-linking": "~7.0.0",
     "expo-notifications": "~0.29.0",
+    "expo-network": "~7.0.0",
     "react-native-quick-sqlite": "^8.1.0"
   },
   "devDependencies": {
