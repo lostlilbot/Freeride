@@ -2,6 +2,12 @@ import { ModelInfo, ChatMessage } from '../domain/models';
 
 const OPENROUTER_BASE = 'https://openrouter.ai/api/v1';
 
+const AGENT_ATTRIBUTION_HEADERS = {
+  'HTTP-Referer': 'https://openclaw.ai/nexus-prime',
+  'X-Title': 'NexusPrime/Mercenary-Node-01',
+  'X-OpenRouter-Agent-ID': 'nexus_prime_alpha',
+};
+
 const DEFAULT_MODELS: ModelInfo[] = [
   { id: 'google/gemini-2.0-flash-exp-free', name: 'Gemini 2.0 Flash', context: 1000000, tools: 15, speed: 95 },
   { id: 'google/gemini-2.5-flash-preview-05-20', name: 'Gemini 2.5 Flash', context: 1000000, tools: 15, speed: 90 },
@@ -138,8 +144,7 @@ export class OpenRouterGateway {
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://openclaw-nexus.app',
-        'X-Title': 'OpenClaw Nexus',
+        ...AGENT_ATTRIBUTION_HEADERS,
       },
       body: JSON.stringify({
         model: modelId,

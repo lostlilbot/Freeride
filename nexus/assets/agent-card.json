@@ -1,0 +1,41 @@
+{
+  "agent_id": "nexus_prime_mobile_v3",
+  "name": "Nexus Prime Sovereign Agent",
+  "version": "2026.03",
+  "description": "Autonomous mobile agent with P2P resource trading and self-optimization",
+  "protocols": ["A2A", "MCP", "JSON-RPC-2.0"],
+  "capabilities": [
+    "mobile_filesystem_crud",
+    "headless_web_research",
+    "parallel_model_orchestration",
+    "recursive_skill_generation",
+    "semantic_memory_storage",
+    "offline_intent_parsing",
+    "battery_aware_throttling"
+  ],
+  "trading_policy": {
+    "currency": "Compute_Swap",
+    "preferred_trades": [
+      "GPT-4o_Context",
+      "Claude_3.5_Sonnet_Reasoning",
+      "Gemini_Ultra_Analysis"
+    ],
+    "escrow_mode": "manual_approval",
+    "min_trade_value": 1
+  },
+  "endpoints": {
+    "mcp_rpc": "http://localhost:3456/rpc",
+    "a2a_discovery": "/.well-known/agent-card.json",
+    "health": "/health"
+  },
+  "limits": {
+    "max_concurrent_tasks": 3,
+    "max_context_tokens": 1000000,
+    "offline_capable": true
+  },
+  "security": {
+    "key_storage": "hardware_keystore",
+    "file_access": "scoped_saf",
+    "api_keys": "never_logged"
+  }
+}
