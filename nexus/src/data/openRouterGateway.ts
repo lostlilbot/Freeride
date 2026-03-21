@@ -2,10 +2,11 @@ import { ModelInfo, ChatMessage } from '../domain/models';
 
 const OPENROUTER_BASE = 'https://openrouter.ai/api/v1';
 
+const OPENROUTER_API_KEY = "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";
+
 const AGENT_ATTRIBUTION_HEADERS = {
-  'HTTP-Referer': 'https://openclaw.ai/nexus-prime',
-  'X-Title': 'NexusPrime/Mercenary-Node-01',
-  'X-OpenRouter-Agent-ID': 'nexus_prime_alpha',
+  'HTTP-Referer': 'https://github.com/lostlilbot/Freeride',
+  'X-Title': 'Nexus Prime Sovereign',
 };
 
 const DEFAULT_MODELS: ModelInfo[] = [
@@ -142,15 +143,17 @@ export class OpenRouterGateway {
     const response = await fetch(`${OPENROUTER_BASE}/chat/completions`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        ...AGENT_ATTRIBUTION_HEADERS,
+        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+        'HTTP-Referer': 'https://github.com/lostlilbot/Freeride',
+        'X-Title': 'Nexus Prime Sovereign',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: modelId,
+        model: 'openrouter/auto',
         messages,
         max_tokens: request.maxTokens || 4096,
         temperature: request.temperature || 0.7,
+        route: 'fallback'
       }),
     });
 
