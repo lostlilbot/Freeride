@@ -10,9 +10,27 @@ import {
   Alert,
   Switch,
   FlatList,
-  RefreshControl
+  RefreshControl,
+  Platform,
+  PermissionsAndroid
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+
+const requestAndroidPermissions = async () => {
+  try {
+    if (Platform.OS !== 'android') return;
+    
+    const permResults = await PermissionsAndroid.requestMultiple([
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+    ]);
+    
+    console.log('Permission results:', permResults);
+  } catch (err) {
+    console.warn('Permission error:', err);
+  }
+};
 import { initDatabase, getSettings, saveSettings, getTradeHistory, getPeers, getConnectedPeers, getAllArtifacts } from './src/data/database';
 import { ModelSelector, getCachedModels, refreshModels, shouldSummarizeContext, summarizeMessages } from './src/data/openRouterGateway';
 import { KnowledgeGraph } from './src/data/knowledgeGraph';
@@ -41,6 +59,7 @@ export default function App() {
   useEffect(() => {
     const init = async () => {
       try {
+        await requestAndroidPermissions();
         await initDatabase();
         const savedSettings = getSettings();
         setSettings(savedSettings);
